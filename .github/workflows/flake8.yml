@@ -4,7 +4,7 @@ name: test-flake8
 on:
   pull_request:
     branches:
-    - master
+    - main
 jobs:
   flake8:
     runs-on: ubuntu-latest
