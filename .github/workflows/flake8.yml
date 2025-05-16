@@ -1,6 +1,5 @@
 name: test-flake8
 
-# Only run this when the master branch changes
 on:
   pull_request:
     branches:
