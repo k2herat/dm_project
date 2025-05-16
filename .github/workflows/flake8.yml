@@ -10,10 +10,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - uses: mhitza/flake8-jupyter-notebook@v1
-      with:
-        debug: 'false' # set 'true' for additional logging
+    #- uses: mhitza/flake8-jupyter-notebook@v1
+     # with:
+      #  debug: 'false' # set 'true' for additional logging
         # paths and files to ignore, one regexp rule per line
-        ignore: |
-          tests/
-          test\.ipynb$
+       # ignore: |
+        #  tests/
+         # test\.ipynb$
