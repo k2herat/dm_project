@@ -1,0 +1,225 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{booktabs}
+
+\geometry{left=2.5cm, right=1.5cm, top=2cm, bottom=2cm}
+
+\title{Отчет по проекту: Проверка гипотез с использованием случайных графов}
+\author{Алметов Кирилл и Хорошенко Дмитрий}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Введение}
+В данной работе исследуется применение характеристик случайных графов для проверки гипотез согласия между распределениями:
+\begin{itemize}
+    \item $H_0$: $\xi \sim \text{Laplace}(0, \sqrt{0.5})$
+    \item $H_1$: $\xi \sim \text{SkewNormal}(1)$
+    \item $H_0$: $ \Gamma (\frac{1}{2}, \sqrt{\frac{1}{2}})$
+    \item $H_1$: Weibull$(\frac{1}{2}; \lambda); \lambda_0 = \frac{1}{\sqrt{10}}$
+\end{itemize}
+
+Анализируются два типа графов:
+
+\begin{itemize}
+    \item KNN-графы
+    \item Дистанционные графы
+\end{itemize}
+
+Характеристики:
+
+\begin{itemize}
+    \item Число компонент связности
+    \item Хроматическое число
+    \item Минимальная степень вершин
+    \item Кликовое число
+\end{itemize}
+
+\section{Описание кода}
+\subsection{Используемые инструменты}
+\begin{itemize}
+    \item Язык программирования: Python 3.10
+    \item Основные библиотеки: numpy, networkx, matplotlib, scikit-learn, scipy, pandas
+    \item Система контроля версий: Git
+    \item Среды разработки: Jupyter Notebook, PyCharm
+\end{itemize}
+
+\subsection{Реализованные алгоритмы}
+\subsubsection{Построение графов}
+\begin{itemize}
+    \item \textbf{KNN-граф}: Для каждой точки находим $k$ ближайших соседей
+    \item \textbf{Дистанционный граф}: Соединяем точки на расстоянии $\leq d$
+\end{itemize}
+
+\subsubsection{Вычисление характеристик}
+\begin{itemize}
+    \item \textbf{Число компонент связности}: Алгоритм поиска связных компонент
+    \item \textbf{Хроматическое число}: Жадный алгоритм раскраски графа
+\end{itemize}
+
+\subsubsection{Критерий согласия}
+\begin{itemize}
+    \item \textbf{Построение множества A}: Определение критической области при $\alpha=0.05$
+    \item \textbf{Оценка мощности}: Вероятность правильного отклонения $H_0$
+\end{itemize}
+
+\section{Описание экспериментов}
+\subsection{Эксперимент 1: Зависимость характеристик от параметров распределений}
+\subsubsection{Цель}
+Исследовать поведение характеристик при изменении параметров распределений ($\beta$ для Laplace, $\alpha$ для SkewNormal).
+
+\subsubsection{Результаты}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{params_vs_distributions.png}
+    \caption{Зависимость числа компонент и хроматического числа от параметров распределений}
+\end{figure}
+
+\begin{itemize}
+    \item Для распределения Лапласа: число компонент в KNN-графе $\approx$1, в дистанционном растет с $\beta$
+    \item Для SkewNormal: при $\alpha=0$ поведение аналогично нормальному распределению
+    \item Хроматическое число в KNN-графах стабильнее, чем в дистанционных
+\end{itemize}
+
+\subsubsection{Результаты}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{params_vs_distributions2.png}
+    \includegraphics[width=0.9\textwidth]{params_vs_distributions3.png}
+    \caption{Зависимость минимальной степени и кликового числа от параметров распределений}
+\end{figure}
+
+\begin{itemize}
+    \item Минимальная степень остаётся постоянной
+    \item Кликовое число уменьшается с ростом u
+\end{itemize}
+
+\subsection{Эксперимент 2: Зависимость от параметров графов и размера выборки}
+\subsubsection{Цель}
+Исследовать поведение характеристик при изменении параметров графов ($k$ для KNN, $d$ для дистанционных) и размера выборки $n$.
+
+\subsubsection{Результаты}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{params_vs_graphs.png}
+    \caption{Зависимость характеристик от параметров графов и размера выборки}
+\end{figure}
+
+\begin{itemize}
+    \item Число компонент уменьшается с ростом $k$ (KNN) и $d$ (дистанционные), что и ожидалось.
+    \item Хроматическое число растет с увеличением $n$ для обоих типов графов
+    \item В KNN графах число компонент растет с увеличением $n$
+\end{itemize}
+
+\subsubsection{Результаты}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{params_vs_graphs2.png}
+    \caption{Зависимость характеристик от параметров графов и размера выборки}
+\end{figure}
+
+\begin{itemize}
+    \item Всё растёт линейно.
+\end{itemize}
+
+
+\subsection{Эксперимент 3: Построение критических областей}
+\subsubsection{Цель}
+Построить критические области для проверки гипотез при $\alpha=0.05$.
+
+\subsubsection{Результаты}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{critical_regions_fixed.png}
+    \caption{Распределения характеристик с критическими областями}
+\end{figure}
+
+
+\subsection{Эксперимент 4: Классификация с несколькими характеристиками}
+\subsubsection{Цель}
+Построить классификатор, использующий обе характеристики для различения распределений.
+
+\subsubsection{Результаты}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{roc_curves.png}
+    \caption{ROC-кривые для классификаторов (n=100)}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Точность классификации (n=500)}
+\begin{tabular}{lcc}
+\toprule
+Модель & Дистанционный граф \\
+\midrule
+Random Forest &  0.94 \\
+SVM & 0.93 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Эксперимент 5: Анализ важности характеристик}
+\subsubsection{Цель}
+Исследовать важность характеристик как признаков классификации.
+
+\subsubsection{Результаты}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{feature_importance.png}
+    \caption{Важность характеристик для классификации}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{metrics.png}
+    \caption{Точность и ошибки}
+\end{figure}
+
+\begin{itemize}
+    \item Число компонент связности - наиболее важный признак
+    \item Для дистанционных графов важность признаков выше
+    \item С ростом $n$ важность числа компонент уменьшается для дистанционных графов, при больших n он становится не так важен, в отличии от хроматического числа.
+\end{itemize}
+
+\section{Промежуточные выводы}
+\begin{enumerate}
+    \item Дистанционные графы показывают лучшие результаты (мощность до 0.725)
+    \item Число компонент связности - наиболее информативная характеристика
+    \item Random Forest превосходит SVM по всем метрикам
+    \item С ростом размера выборки:
+    \begin{itemize}
+        \item Точность увеличивается до 94\% 
+        \item Дисперсия метрик уменьшается
+    \end{itemize}
+\end{enumerate}
+
+\section{Заключение}
+Основные результаты исследования:
+\begin{itemize}
+    \item Разработан эффективный метод проверки гипотез с использованием характеристик случайных графов
+    \item Для практического применения рекомендуются:
+    \begin{itemize}
+        \item Дистанционные графы с $d \approx 0.5$
+        \item Число компонент связности как основная характеристика
+        \item Random Forest в качестве классификатора
+    \end{itemize}
+    \item Наилучшие результаты достигнуты при $n \geq 100$ (мощность $> 0.9$)
+\end{itemize}
+
+Перспективные направления:
+\begin{itemize}
+    \item Добавление других характеристик графов
+    \item Адаптивный выбор параметров графов
+    \item Применение графовых нейронных сетей
+\end{itemize}
+
+\end{document}
